@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hinos Brasileirão</title>
+
+    <link rel="stylesheet" href="css/halfmoon.min.css">
+    <script src="css/halfmoon.min.js"></script>
+    <script src="https://kit.fontawesome.com/d064bda31b.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+    <script src="programas.js"></script>
+
+    <script>
+        function shuffle(array) {
+            var currentIndex = array.length,  randomIndex;
+
+            while (currentIndex != 0) {
+
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+
+                [array[currentIndex], array[randomIndex]] = [
+                array[randomIndex], array[currentIndex]];
+
+            }
+
+            return array;
+        }
+    </script>
+
+    <script>
+        var utf8_to_latin1 = function (s) {
+            return unescape(encodeURIComponent(s));
+        };
+        var latin1_to_utf8 = function (s) {
+            return decodeURIComponent(escape(s));
+        };
+
+        var audios = []
+
+        $.each(programas, function(i, item) {
+            var val = latin1_to_utf8(item)
+            audios.push(val)
+        });
+
+        shuffle(audios)
+    </script>
+
+    
+
+    <script>
+        $(function() {
+			$(".guess").autocomplete({
+				source: audios, 
+				minLength: 2,
+			});
+
+		});
+
+    </script>
+
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 70%;
+            margin: 10px auto;
+            position: relative;
+            text-align:center;
+        }
+
+        div.gallery {
+            margin: 5px;
+            float: left;
+            width: 300px;
+            padding: 10px;
+        }
+
+        div.gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        #buttons {
+            margin-bottom: 20px;
+        }
+
+        footer {
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+
+    <script>
+
+        function audio(url) {
+            new Audio(url).play();
+        }
+    </script>
+
+</head>
+<body class="dark-mode">
+
+    <h1 style="text-align: center;">Hinos Brasileirão</h1>
+    <h5 style="text-align: center;">Brasileirão Série A & B</h5>
+    <h3 style="text-align: center;">Total de áudios: <span id="TotalAudios"></span></h3>
+
+    <div class="container" id="container-acertos" style="display: none;">
+        <div class="alert alert-success filled-dm" role="alert">
+            <h4 class="alert-heading">Você acertou <span id="acertos"></span></h4>
+        </div>
+    </div>
+
+    <div class="container" id="main-container">
+        
+    </div>
+
+    <div id="buttons" style="text-align: center;">
+        <button class="btn btn-primary" style="margin-top: 20px;" type="button" onclick="check()">Checar Respostas</button>
+        <button class="btn btn-primary" style="margin-top: 20px;" type="button" onclick="$('.resposta').show()" disabled>Revelar Respostas</button>
+    </div>
+
+    <footer>
+        Ideia de: <a href="https://www.twitch.tv/jefff" target="_blank" rel="noopener noreferrer">JeFFF</a> <br>
+        Criado Por: <a href="https://github.com/Viniciuuz" target="_blank" rel="noopener noreferrer">Viniciuuz</a>
+    </footer>
+
+
+    <script>
+        var div = $("#main-container")
+        $.each(audios, function(index, item) {
+            div.append(`<div class="gallery shadow-lg">
+                            <button class="btn btn-primary audio-interact" style="margin-bottom: 5px;" type="button" item="${index}" onclick="audio('audios/${item}.mp3')">Tocar</button>
+                            <input type="text" class="form-control guess">
+                            <span class="resposta" style="display: none;">Resposta: ${item}</span>
+                        </div>`)
+        });
+
+        $("#TotalAudios").html(programas.length)
+    </script>
+
+    <script>
+
+        function check(){
+            var x = $(".guess")
+            var acertos = 0
+            $.each(x, function(i, item) {
+
+                if(x[i].value == audios[i]){
+                    x[i].style.color = "green";
+                    acertos++
+                }else{
+                    x[i].style.color = "red";
+                }
+
+            });
+
+            $(".resposta").show()
+            $("#acertos").html(acertos)
+            $("#container-acertos").show()
+            $('.btn').prop('disabled', false);
+            document.getElementById("container-acertos").scrollIntoView();
+
+        }
+    </script>
+</body>
+</html>
