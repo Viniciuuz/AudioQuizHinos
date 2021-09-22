@@ -21,15 +21,15 @@ from math import floor
 from shutil import move
 
 filenames = next(walk("audios/original/"), (None, None, []))[2]
-# for i in filenames:
-#     name = i.split(".")[0]
-#     audio = floor(MP3(f"audios/original/{i}").info.length)
+for i in filenames:
+    name = i.split(".")[0]
+    audio = floor(MP3(f"audios/original/{i}").info.length)
 
-#     if audio <= 10:
-#         print(f"movendo {name}")
-#         move(f"audios/original/{i}", f"audios/{i}")
+    if audio <= 10:
+        print(f"movendo {name}")
+        move(f"audios/original/{i}", f"audios/{i}")
     
-#     system(f'ffmpeg -i "audios\original\{i}" -c copy -ss 00:00:00 -to 00:00:10.99 "audios\{i}" -y')
+    system(f'ffmpeg -i "audios\original\{i}" -c copy -ss 00:00:00 -to 00:00:10.99 "audios\{i}" -y')
 
 
 data = next(walk("audios/"), (None, None, []))[2]
